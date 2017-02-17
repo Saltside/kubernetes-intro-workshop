@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: app-tier
+spec:
+  replicas: 5
+  template:
+    metadata:
+      name: app-tier
+      labels:
+        app: demo
+        tier: app
+    spec:
+      containers:
+        - name: server
+          image: slashdeploy/microservice-example:server-v1
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: REDIS_URL
+              value: "redis://$(DATA_TIER_SERVICE_HOST):$(DATA_TIER_SERVICE_PORT_REDIS)"
